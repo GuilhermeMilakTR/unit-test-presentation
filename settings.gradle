@@ -1,0 +1,4 @@
+rootProject.name = 'unit.test'
+
+include 'api'
+include 'domain'
