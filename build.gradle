@@ -1,47 +1,64 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.0'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'com.demo'
 version = '0.0.1-SNAPSHOT'
 
 bootJar {
-	enabled = false
+    enabled = false
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 allprojects {
-	repositories {
-		mavenCentral()
-	}
+    repositories {
+        maven {
+            url "${artifactory_contextUrl}/${artifactory_resolve_repoKey_release}"
+            credentials {
+                username = "${tr1_user}"
+                password = "${tr1_password}"
+            }
+        }
+        maven {
+            url "${artifactory_contextUrl}/${artifactory_resolve_repoKey_snapshot}"
+            credentials {
+                username = "${tr1_user}"
+                password = "${tr1_password}"
+            }
+        }
+
+        mavenCentral()
+    }
 }
 
 subprojects {
-	apply plugin: 'java'
-	
-	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		
-		compileOnly 'org.projectlombok:lombok'
-		
-		runtimeOnly 'org.postgresql:postgresql'
-		
-		annotationProcessor 'org.projectlombok:lombok'
-		
-		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	}
+    apply plugin: 'java'
 
-	test {
-		useJUnitPlatform()
-	}
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+
+        // implementation 'com.tr.bluemoon.brtap:commons:2.0.0-SNAPSHOT'
+
+        compileOnly 'org.projectlombok:lombok'
+
+        runtimeOnly 'org.postgresql:postgresql'
+
+        annotationProcessor 'org.projectlombok:lombok'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    test {
+        useJUnitPlatform()
+    }
 }
 
 /*tasks.named('test') {
